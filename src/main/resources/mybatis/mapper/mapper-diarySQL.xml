@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="diary">
+	<select id="selectDogInfo" parameterType="int" resultType="dog">
+		select  
+			DOG_NO as dogNo, 
+			MEMBER_NO as memberNo, 
+			DOG_NAME as dogName,
+			GENDER as gender,
+			BREED as breed,
+			DOG_SIZE as dogSize,
+			NEUTRALIZATION_YN as neutralizationYN,
+			VACCINATION_YN as vaccinationYN,
+			BIRTHDATE  as birthdate,
+			DOG_PROFILE as dogProfile,
+			DEL_YN as delYN 
+		from dog where MEMBER_NO=#{memberNo} and DOG_NO=#{dogNo} and DEL_YN='N'
+	</select>
+	
+	<select id="calViewList" parameterType="hashmap" resultType="diary">
+		select 
+		 	DIARY_NO as diaryNo,
+			DOG_NO as dogNo,
+			MEMBER_NO as memberNo,
+			WEIGHT as weight,
+			FEED_NAME as feedName,
+			FEED_TYPE as feedType,
+			FEED_AMOUNT as feedAmount,
+			WATER_AMOUNT as waterAmount,
+			HEALTH_FOOD_YN as healthFoodYN,
+			SNACK_YN as snackYN,
+			WALK as walk,
+			MEMO as memo,
+			SCHEDULEDATE as scheduleDate,
+			REGDATE as regDate  
+		from DIARY  
+		where MEMBER_NO=#{memberNo} AND DOG_NO=#{dogNo} AND SUBSTR(SCHEDULEDATE,1,6)=#{yyyyMM}
+	</select>
+	
+	<select id="selectDiary" parameterType="hashmap" resultType="diary">
+		select  
+			DIARY_NO as diaryNo,
+			DOG_NO as dogNo,
+			MEMBER_NO as memberNo,
+			WEIGHT as weight,
+			FEED_NAME as feedName,
+			FEED_TYPE as feedType,
+			FEED_AMOUNT as feedAmount,
+			WATER_AMOUNT as waterAmount,
+			HEALTH_FOOD_YN as healthFoodYN,
+			SNACK_YN as snackYN,
+			WALK as walk,
+			MEMO as memo,
+			SCHEDULEDATE as scheduleDate,
+			REGDATE as regDate 
+		from diary where DOG_NO=#{dogNo} and SCHEDULEDATE=#{scheduleDate}
+	</select>
+	
+	<update id="updateDiary" parameterType="diary">
+		update diary set 
+			WEIGHT=#{weight},
+			FEED_NAME=#{feedName},
+			FEED_TYPE=#{feedType},
+			FEED_AMOUNT=#{feedAmount},
+			WATER_AMOUNT=#{waterAmount},
+			HEALTH_FOOD_YN=#{healthFoodYN},
+			SNACK_YN=#{snackYN},
+			WALK=#{walk},
+			MEMO=#{memo},
+			REGDATE=SYSDATE 
+		where DIARY_NO=#{diaryNo}	
+	</update>
+	
+	<insert id="insertDiary" parameterType="diary">
+		insert into diary values(
+			DIARY_SQ .NEXTVAL,
+			#{dogNo},
+			#{memberNo},
+			#{weight},
+			#{feedName},
+			#{feedType},
+			#{feedAmount},
+			#{waterAmount},
+			#{healthFoodYN},
+			#{snackYN},
+			#{walk},
+			#{memo},
+			#{scheduleDate},
+			SYSDATE 
+		) 
+	</insert>
+	
+	<delete id="deleteDiary" parameterType="diary">
+		delete from diary where DIARY_NO=#{diaryNo} and SCHEDULEDATE=#{scheduleDate}
+	</delete>
+</mapper>

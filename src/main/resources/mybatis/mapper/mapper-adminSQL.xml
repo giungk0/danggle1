@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin">
+	
+	<select id="selectAdminLogin" parameterType="hashmap" resultType="adminVO">
+		SELECT 
+			admin_no as adminNo,
+			admin_id as adminID,
+			admin_pwd as adminPWD,
+			admin_name as adminName,
+			admin_email as adminEmail,
+			admin_grade as adminGrade,
+			admin_date as adminDate 
+			FROM admin 
+			WHERE (admin_id=#{adminID} AND admin_pwd=#{adminPWD} ) AND (NOT admin_grade='D')
+	</select>
+	
+	<select id="selectAdminIDCheck" parameterType="string" resultType="string">
+		SELECT
+			admin_id as adminID
+			FROM admin
+			WHERE admin_id=#{chkID}	
+	</select>	
+	
+	<insert id="insertAdminAccount" parameterType="adminVO">
+		INSERT INTO admin VALUES (
+			ADMINNO_SQ.NEXTVAL,
+			#{adminID},
+			#{adminPWD},
+			#{adminName},
+			#{adminEmail},
+			DEFAULT,
+			SYSDATE
+		)
+			
+	</insert>
+	
+	<select id="selectAdminEmailCheck" parameterType="string" resultType="string">
+		SELECT
+			admin_email as adminEmail
+			FROM admin
+			WHERE admin_email=#{chkMail}	
+	</select>
+	
+	<update id="updateAdminPWD" parameterType="map">
+		UPDATE admin
+		SET admin_pwd=#{newPWD}
+		WHERE admin_id=#{adminID}
+	</update>
+	
+	<update id="updateAdminAccount" parameterType="adminVO">
+		UPDATE admin
+		SET admin_name=#{adminName}, admin_email=#{adminEmail}
+		WHERE admin_id=#{adminID}	
+	</update>
+	
+	<select id="selectAdminAccount" parameterType="string" resultType="adminVO">
+		SELECT 
+			admin_no as adminNo,
+			admin_id as adminID,
+			admin_pwd as adminPWD,
+			admin_name as adminName,
+			admin_email as adminEmail,
+			admin_grade as adminGrade,
+			admin_date as adminDate 
+		FROM admin 
+		WHERE admin_id=#{adminID}
+	</select>
+	
+	<select id="selectAdminList" resultType="adminVO">
+		SELECT
+			admin_no as adminNo,
+			admin_id as adminID,
+			admin_pwd as adminPWD,
+			admin_name as adminName,
+			admin_email as adminEmail,
+			admin_grade as adminGrade,
+			admin_date as adminDate 
+		FROM admin
+		WHERE NOT admin_grade='S'
+	</select>
+	
+	<select id="selectAdminNew" resultType="int">
+		SELECT
+			COUNT (*)
+		FROM admin
+		WHERE admin_grade='C'	
+	</select>
+
+	<update id="updateAdminGrade" parameterType="map">
+		UPDATE admin
+		SET admin_grade=#{newGrade}			
+		WHERE admin_no IN
+		<foreach collection="adminNo" item="num" open="(" separator="," close=")">
+			#{num}
+		</foreach>	
+	</update>
+	
+	<select id="selectAdminSearch" parameterType="map" resultType="adminVO">
+		SELECT
+			admin_no as adminNo,
+			admin_id as adminID,
+			admin_pwd as adminPWD,
+			admin_name as adminName,
+			admin_email as adminEmail,
+			admin_grade as adminGrade,
+			admin_date as adminDate 
+		FROM admin
+		WHERE
+		<choose>
+			<when test="tag.equals('adminID')">
+				admin_id LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<when test="tag.equals('adminName')">
+				admin_name LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<otherwise>
+				(admin_id LIKE '%' || #{keyword} || '%') OR (admin_name LIKE '%' || #{keyword} || '%')
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectMemberList" parameterType="map" resultType="member">
+		 SELECT
+		 	   member_no AS memberNo,
+			   member_id AS memberId,
+			   member_pwd AS memberPwd,
+			   auth_provider AS authProvider,
+			   nickname AS nickname,
+			   gender AS gender,
+			   birthdate AS birthdate,
+			   email AS email,
+			   address AS address,
+			   address_detail AS addressDetail,
+			   enroll_date AS enrollDate,
+			   member_status AS memberStatus,
+			   dog_yn AS dogYN,
+			   member_profile AS memberProfile
+ 		 FROM (SELECT ROW_NUMBER() OVER(ORDER BY member_no ASC) AS num, member.* FROM member)
+		 WHERE num BETWEEN #{first} AND #{last}
+	</select>
+	
+	<select id="selectMemberCount" resultType="int">
+		 SELECT 
+		 	COUNT(*) AS count 
+		 FROM member		 
+	</select>
+
+	<update id="updateMemberStatus" parameterType="map">
+		UPDATE member
+		SET member_status=#{status}			
+		WHERE member_no IN
+		<foreach collection="memberNo" item="num" open="(" separator="," close=")">
+			#{num}
+		</foreach>
+	</update>
+	
+	<select id="selectDormantCount" resultType="int">
+		 SELECT 
+		 	COUNT(*) AS count 
+		 FROM member
+		 WHERE member_status=1		 
+	</select>
+
+	<select id="selectMemberSearch" parameterType="map" resultType="member">
+		SELECT
+		 	   member_no AS memberNo,
+			   member_id AS memberId,
+			   member_pwd AS memberPwd,
+			   auth_provider AS authProvider,
+			   nickname AS nickname,
+			   gender AS gender,
+			   birthdate AS birthdate,
+			   email AS email,
+			   address AS address,
+			   address_detail AS addressDetail,
+			   enroll_date AS enrollDate,
+			   member_status AS memberStatus,
+			   dog_yn AS dogYN,
+			   member_profile AS memberProfile
+		FROM member
+		WHERE
+		<choose>
+			<when test="tag.equals('memberId')">
+				member_id LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<when test="tag.equals('nickname')">
+				nickname LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<otherwise>
+				(member_id LIKE '%' || #{keyword} || '%') OR (nickname LIKE '%' || #{keyword} || '%')
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insertAdminNotice" parameterType="map">
+		INSERT INTO notice VALUES (
+			NOTICE_SQ.NEXTVAL,
+			#{subject},
+			#{content},
+			DEFAULT,
+			DEFAULT,
+			'N',
+			DEFAULT			
+		)	
+	</insert>
+	
+	<select id="selectNoticeList" parameterType="map" resultType="notice">
+		 SELECT
+		 	   notice_no AS noticeNo,
+			   subject AS subject,
+			   content AS content,
+			   regdate AS regDate,
+			   view_count AS viewCount,
+			   del_yn AS delYN,
+			   notice_photo AS noticePhoto
+ 		 FROM (SELECT ROW_NUMBER() OVER(ORDER BY notice_no DESC) AS num, notice.* FROM notice)
+		 WHERE num BETWEEN #{first} AND #{last}
+	</select>
+	
+	<select id="selectNoticeCount" resultType="int">
+		SELECT 
+		 	COUNT(*) AS count 
+		 FROM notice		 
+	</select>
+	
+	<select id="selectNoticeRead" parameterType="int" resultType="notice">
+		 SELECT
+		 	   notice_no AS noticeNo,
+			   subject AS subject,
+			   content AS content,
+			   regdate AS regDate,
+			   view_count AS viewCount,
+			   del_yn AS delYN,
+			   notice_photo AS noticePhoto
+ 		 FROM notice
+		 WHERE notice_no=#{noticeNo}	
+	</select>
+	
+	<update id="updateNoticeEdit" parameterType="map">
+		UPDATE notice
+		SET 
+		subject=#{subject},
+		content=#{content}			
+		WHERE notice_no=#{noticeNo}
+	</update>
+	
+	<update id="updateNoticeDelete" parameterType="int">
+		UPDATE notice
+		SET
+		del_yn='Y'
+		WHERE notice_no=#{noticeNo}	
+	</update>
+	
+	
+	<select id="selectNoticeSearch" parameterType="map" resultType="notice">
+		SELECT
+		 	   notice_no AS noticeNo,
+			   subject AS subject,
+			   content AS content,
+			   regdate AS regDate,
+			   view_count AS viewCount,
+			   del_yn AS delYN,
+			   notice_photo AS noticePhoto
+ 		 FROM notice
+		WHERE
+		<choose>
+			<when test="tag.equals('subject')">
+				subject LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<when test="tag.equals('content')">
+				content LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<otherwise>
+				(subject LIKE '%' || #{keyword} || '%') OR (content LIKE '%' || #{keyword} || '%')
+			</otherwise>
+		</choose>	
+	</select>
+	
+	<update id="updateNoticeChnage" parameterType="map">
+		UPDATE notice
+		SET del_yn=#{status}
+		WHERE notice_no IN 
+		<foreach collection="noticeNo" item="chk" open="(" separator="," close=")">
+			#{chk}
+		</foreach>
+	</update>
+	
+	<select id="selectBoardList" parameterType="map" resultType="board">
+		 SELECT
+		 	   board_no AS boardNo,
+			   member_no AS memberNo,
+			   subject AS subject,
+			   content AS content,
+			   regdate AS regDate,
+			   view_count AS viewCount,
+			   del_yn AS delYN,
+			   board_photo AS boardPhoto
+ 		 FROM (SELECT ROW_NUMBER() OVER(ORDER BY board_no DESC) AS num, board.* FROM board)
+		 WHERE num BETWEEN #{first} AND #{last}
+	</select>
+	
+	<select id="selectBoardCount" resultType="int">
+		SELECT 
+		 	COUNT(*) AS count 
+		 FROM board
+	</select>
+	
+	<select id="selectBoardSearch" parameterType="map" resultType="board">
+		 SELECT
+		 	   board_no AS boardNo,
+			   member_no AS memberNo,
+			   subject AS subject,
+			   content AS content,
+			   regdate AS regDate,
+			   view_count AS viewCount,
+			   del_yn AS delYN,
+			   board_photo AS boardPhoto
+ 		 FROM board
+		WHERE
+		<choose>
+			<when test="tag.equals('subject')">
+				subject LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<when test="tag.equals('content')">
+				content LIKE '%' || #{keyword} || '%'
+			</when>
+			
+			<otherwise>
+				(subject LIKE '%' || #{keyword} || '%') OR (content LIKE '%' || #{keyword} || '%')
+			</otherwise>
+		</choose>
+	</select>
+	
+	<update id="updateBoardChange" parameterType="map">
+		UPDATE board
+		SET del_yn=#{status}			
+		WHERE board_no IN
+		<foreach collection="boardNo" item="num" open="(" separator="," close=")">
+			#{num}
+		</foreach>
+	</update>
+	
+	<select id="selectDogList" resultType="dog">
+		SELECT  
+			DOG_NO AS dogNo, 
+			MEMBER_NO AS memberNo, 
+			DOG_NAME AS dogName,
+			GENDER AS gender,
+			BREED AS breed,
+			DOG_SIZE AS dogSize,
+			NEUTRALIZATION_YN AS neutralizationYN,
+			VACCINATION_YN AS vaccinationYN,
+			BIRTHDATE  AS birthdate,
+			DOG_PROFILE AS dogProfile,
+			DEL_YN AS delYN 
+		FROM (SELECT ROW_NUMBER() OVER(ORDER BY DOG_NO DESC) AS num , dog.*  FROM dog) 
+		WHERE num BETWEEN 1 AND 7 AND DEL_YN='N'	
+	</select>
+	
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="member">
+
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO MEMBER 
+					VALUES (
+							MEMBER_SEQ.NEXTVAL,
+							#{memberId},
+							#{memberPwd},
+							#{authProvider},
+							#{nickname},
+							#{gender},
+							#{birthdate},
+							#{email},
+							#{address},
+							#{addressDetail},
+	                        SYSDATE,
+							'0',
+							'N',
+							#{memberProfile},
+							SYSDATE
+							)
+	</insert>
+
+	<select id="selectId" parameterType="string" resultType="member">
+		SELECT MEMBER_NO AS memberNo,
+			   MEMBER_ID AS memberId,
+			   MEMBER_PWD AS memberPwd,
+			   AUTH_PROVIDER AS authProvider,
+			   NICKNAME AS nickname,
+			   GENDER AS gender,
+			   BIRTHDATE AS birthdate,
+			   EMAIL AS email,
+			   ADDRESS AS address,
+			   ADDRESS_DETAIL AS addressDetail,
+			   ENROLL_DATE AS enrollDate,
+			   MEMBER_STATUS AS memberStatus,
+			   DOG_YN AS dogYN,
+			   MEMBER_PROFILE AS memberProfile
+		  FROM MEMBER
+		 WHERE MEMBER_ID=#{value}
+	</select>
+	
+		<select id="loginMember" parameterType="member" resultType="member">
+		SELECT MEMBER_NO AS memberNo,
+			   MEMBER_ID AS memberId,
+			   MEMBER_PWD AS memberPwd,
+			   AUTH_PROVIDER AS authProvider,
+			   NICKNAME AS nickname,
+			   GENDER AS gender,
+			   BIRTHDATE AS birthdate,
+			   EMAIL AS email,
+			   ADDRESS AS address,
+			   ADDRESS_DETAIL AS addressDetail,
+			   ENROLL_DATE AS enrollDate,
+			   MEMBER_STATUS AS memberStatus,
+			   DOG_YN AS dogYN,
+			   MEMBER_PROFILE AS memberProfile
+		  FROM MEMBER
+		 WHERE MEMBER_ID=#{memberId} AND MEMBER_PWD=#{memberPwd}
+	</select>
+	
+	<select id="selectEmail" parameterType="string" resultType="member">
+		SELECT MEMBER_NO AS memberNo,
+			   MEMBER_ID AS memberId,
+			   MEMBER_PWD AS memberPwd,
+			   AUTH_PROVIDER AS authProvider,
+			   NICKNAME AS nickname,
+			   GENDER AS gender,
+			   BIRTHDATE AS birthdate,
+			   EMAIL AS email,
+			   ADDRESS AS address,
+			   ADDRESS_DETAIL AS addressDetail,
+			   ENROLL_DATE AS enrollDate,
+			   MEMBER_STATUS AS memberStatus,
+			   DOG_YN AS dogYN,
+			   MEMBER_PROFILE AS memberProfile
+		  FROM MEMBER
+		 WHERE EMAIL=#{value}
+	</select>
+	
+	<insert id="insertAuthNo" parameterType="emailAuthHist">
+		INSERT INTO EMAIL_AUTH_HIST
+							 VALUES (
+							 		#{memberNo},
+							 		SYSDATE,
+							 		#{email},
+							 		#{randomNo}
+							 		)
+	</insert>
+	
+	<select id="checkIdCode" parameterType="hashmap" resultType="hashmap">
+		SELECT E.MEMBER_NO memberNo,
+			   E.SEND_DATE sendDate,
+			   M.MEMBER_ID memberId,
+			   TO_CHAR(M.ENROLL_DATE, 'YYYY" /" MM" /" DD') enrollDate,
+               TO_NUMBER(CASE WHEN TRUNC((SYSDATE - E.SEND_DATE) * 24 * 60 * 60) <![CDATA[<]]> 180 THEN 1 ELSE 0 END) timegap
+		  FROM (
+	            SELECT MEMBER_NO, MAX(SEND_DATE) SEND_DATE
+	            FROM Email_Auth_Hist
+	            WHERE EMAIL = #{email}
+	            AND RANDOM_NO = #{findIdCode}
+	            GROUP BY MEMBER_NO
+        		) E
+		 INNER JOIN MEMBER M
+			ON M.MEMBER_NO = E.MEMBER_NO
+	</select>
+	
+	<select id="selectIdEmail" parameterType="hashmap" resultType="member">
+		SELECT MEMBER_NO AS memberNo,
+			   MEMBER_ID AS memberId,
+			   MEMBER_PWD AS memberPwd,
+			   AUTH_PROVIDER AS authProvider,
+			   NICKNAME AS nickname,
+			   GENDER AS gender,
+			   BIRTHDATE AS birthdate,
+			   EMAIL AS email,
+			   ADDRESS AS address,
+			   ADDRESS_DETAIL AS addressDetail,
+			   ENROLL_DATE AS enrollDate,
+			   MEMBER_STATUS AS memberStatus,
+			   DOG_YN AS dogYN,
+			   MEMBER_PROFILE AS memberProfile
+		  FROM MEMBER
+		 WHERE MEMBER_ID=#{memberId} AND EMAIL=#{email}
+	</select>
+	
+	<select id="checkPwdCode" parameterType="hashmap" resultType="string">
+		SELECT CASE WHEN TRUNC((SYSDATE - E.SEND_DATE) * 24 * 60 * 60) <![CDATA[<]]> 180 THEN 1 ELSE 0 END timegap
+			  FROM (
+		            SELECT MEMBER_NO, MAX(SEND_DATE) SEND_DATE
+		            FROM Email_Auth_Hist
+		            WHERE EMAIL = #{email}
+		            AND RANDOM_NO = #{findPwdCode}
+		            GROUP BY MEMBER_NO
+	        		) E
+			 INNER JOIN MEMBER M
+				ON M.MEMBER_NO = E.MEMBER_NO
+	        where M.member_id = #{memberId}
+	</select>
+	
+	<update id="updateMemberPwd" parameterType="hashmap">
+		UPDATE MEMBER SET
+			   MEMBER_PWD=#{memberPwd}
+			   WHERE MEMBER_ID=#{memberId}
+	</update>
+	
+	<update id="updateLoginDate" parameterType="member">
+		UPDATE MEMBER SET
+			   LOGIN_DATE=SYSDATE
+		 WHERE MEMBER_ID=#{memberId}
+	</update>
+	
+	<update id="updateDormantMember" parameterType="member">
+		UPDATE MEMBER SET
+			   MEMBER_STATUS='0'
+		 WHERE MEMBER_ID=#{memberId} AND MEMBER_PWD=#{memberPwd}
+	</update>
+</mapper>

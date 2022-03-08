@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<!-- null값 허용 -->
+	<settings>
+	   <setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="kr.co.todaydaeng.member.model.vo.Member" alias="member"/>
+		<typeAlias type="kr.co.todaydaeng.board.model.vo.Board" alias="board"/>
+		<typeAlias type="kr.co.todaydaeng.board.model.vo.BoardEx" alias="boardEx"/>
+		<typeAlias type="kr.co.todaydaeng.board.model.vo.Notice" alias="notice"/>
+		<typeAlias type="kr.co.todaydaeng.board.model.vo.Comment" alias="comment"/>
+        <typeAlias type="kr.co.todaydaeng.admin.model.vo.AdminVO" alias="adminVO" />
+		<typeAlias type="kr.co.todaydaeng.member.model.vo.EmailAuthHist" alias="emailAuthHist"/>
+		<typeAlias type="kr.co.todaydaeng.myPage.model.vo.Dog" alias="dog"/>
+		<typeAlias type="kr.co.todaydaeng.diary.model.vo.Diary" alias="diary"/>
+		<typeAlias type="kr.co.todaydaeng.board.model.vo.Comment" alias="comment"/>
+	</typeAliases>
+
+</configuration>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="comment">
+
+		<!-- 댓글 조회 -->
+		<select id="commentList" resultType="comment" parameterType="int">
+			SELECT
+			comment_no as commentNo,
+            board_no as boardNo,
+            b_Comment as bComment,
+            regdate as regDate,
+            del_yn as delYN,
+            member_id as memberId
+          FROM
+            BOARDCOMMENT  
+              LEFT JOIN MEMBER USING (member_no)
+          WHERE board_no = #{_parameter}	
+		</select>
+		
+		
+		<!-- 댓글 작성 -->
+		<insert id="insertComment" parameterType="hashmap">
+			INSERT INTO BOARDCOMMENT VALUES(
+			COMMENT_SQ.nextval,
+			#{boardNo},
+			#{memberNo},
+			#{bComment},
+			SYSDATE,
+			'N'
+		)
+		</insert>
+			
+		<!-- 댓글 수정 -->
+		<update id="updateComment" parameterType="comment">
+			update BOARDCOMMENT set
+				member_Id = #{memberId},
+				b_Comment = #{bComment}
+			where comment_No = #{commentNo}
+				and board_No = #{boardNo}	
+		</update>
+		
+		<!-- 댓글 삭제 -->
+		<delete id="deletecomment" parameterType="comment">
+			delete from BOARDCOMMENT
+			DEL_YN = 'Y' 
+		where comment_No=#{commentNo} and DEL_YN='N'
+		</delete>
+		
+<!-- <<<<<<< HEAD -->
+<!--  </mapper>  -->
+<!--  =======  -->
+</mapper>
+<!--  >>>>>>> 4cf2926bae90cd94425735eec0245dc3e29bc714  -->

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@khds-b1.iptime.org:21521:xe"/>
+		<property name="username" value="danggle"></property>
+		<property name="password" value="danggle"></property>
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:/mybatis/mapper/**/*SQL.xml"/>
+		<property name="configLocation" value="classpath:/mybatis/mybatis-config.xml"/>
+	</bean>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg index="0" ref="sqlSession"></constructor-arg>
+	</bean>
+
+<!--Admin Service의 aop transaction 처리를 위한 설정 추가-->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />		
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* kr.co.todaydaeng.admin.model.service.ManageServiceImpl.*(..))" id="txPointCutA" />
+		<aop:pointcut expression="execution(* kr.co.todaydaeng.admin.model.service.AdminServiceImpl.*(..))" id="txPointCutB" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCutA" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCutB" />	
+	</aop:config>
+
+</beans>

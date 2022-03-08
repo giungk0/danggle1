@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="myPage">
+
+	<!-- 비밀번호 확인 SQL -->
+	<select id="selectPwdCheck" parameterType="hashmap" resultType="member">
+		SELECT MEMBER_NO AS memberNo,
+			   MEMBER_ID AS memberId,
+			   MEMBER_PWD AS memberPwd,
+			   AUTH_PROVIDER AS authProvider,
+			   NICKNAME AS nickname,
+			   GENDER AS gender,
+			   BIRTHDATE AS birthdate,
+			   EMAIL AS email,
+			   ADDRESS AS address,
+			   ADDRESS_DETAIL AS addressDetail,
+			   ENROLL_DATE AS enrollDate,
+			   MEMBER_STATUS AS memberStatus,
+			   DOG_YN AS dogYN,
+			   MEMBER_PROFILE AS memberProfile
+		  FROM MEMBER 
+		 WHERE MEMBER_ID=#{memberId} AND MEMBER_PWD=#{memberPwd}
+	</select>
+	
+	<!-- 회원 정보 수정 SQL -->
+	<update id="updateMemberInfo" parameterType="member">
+		update member set 
+			NICKNAME=#{nickname}, 
+			GENDER=#{gender},
+			BIRTHDATE=#{birthdate},
+			EMAIL=#{email},
+			ADDRESS=#{address},
+			ADDRESS_DETAIL=#{addressDetail},
+			MEMBER_PROFILE=#{memberProfile} 
+		where MEMBER_ID=#{memberId}
+	</update>
+	
+	<!-- 비밀번호 수정 SQL -->
+	<update id="updatePwdChange">
+		update member set
+			MEMBER_PWD=#{newMemberPwd} 
+		where MEMBER_ID=#{memberId} and MEMBER_PWD=#{originalMemberPwd}
+	</update>
+	
+	<!-- 탈퇴 SQL -->
+	<update id="withdrawCheck" parameterType="hashmap">
+		update member set
+			MEMBER_STATUS='2'
+		WHERE MEMBER_ID=#{memberId} AND MEMBER_PWD=#{memberPwd}
+	</update>
+	
+	<!-- 반려경 정보 출력  SQL 방법 1-->
+	<select id="selectAllDogInfoList_1" parameterType="hashmap" resultType="dog">
+		select  
+			DOG_NO as dogNo, 
+			MEMBER_NO as memberNo, 
+			DOG_NAME as dogName,
+			GENDER as gender,
+			BREED as breed,
+			DOG_SIZE as dogSize,
+			NEUTRALIZATION_YN as neutralizationYN,
+			VACCINATION_YN as vaccinationYN,
+			BIRTHDATE  as birthdate,
+			DOG_PROFILE as dogProfile,
+			DEL_YN as delYN 
+		from(select row_number() over(order by DOG_NO asc) as num , dog.*  from dog) where member_no=#{memberNo} and num between #{start} and #{end} and DEL_YN='N'
+	</select>
+	
+	<!-- 반려경 정보 출력  SQL 방법 2 -->
+		<select id="selectAllDogInfoList" resultType="dog">
+		select  
+			DOG_NO as dogNo, 
+			MEMBER_NO as memberNo, 
+			DOG_NAME as dogName,
+			GENDER as gender,
+			BREED as breed,
+			DOG_SIZE as dogSize,
+			NEUTRALIZATION_YN as neutralizationYN,
+			VACCINATION_YN as vaccinationYN,
+			BIRTHDATE  as birthdate,
+			DOG_PROFILE as dogProfile,
+			DEL_YN as delYN 
+		from dog where member_no=#{memberNo} and DEL_YN='N'
+	</select>
+	
+	
+	<!-- 반려견 정보 출력 페이지 네비  SQL -->
+	<select id="selectTotalCount" resultType="string">
+		select count(*) as count from dog where member_no=#{member_no} and DEL_YN='N'
+	</select>
+	
+	<insert id="insertDogInfo" parameterType="dog">
+		insert into dog values(
+			DOG_SQ.nextval, 
+			#{memberNo},
+			#{dogName},
+			#{gender},
+			#{breed},
+			#{dogSize},
+			#{neutralizationYN},
+			#{vaccinationYN},
+			#{birthdate},
+			#{dogProfile},
+			'N'
+		)
+	</insert>
+	
+	<select id="selectOneDogInfo" resultType="dog">
+		select 
+			DOG_NO as dogNo, 
+			MEMBER_NO as memberNo, 
+			DOG_NAME as dogName,
+			GENDER as gender,
+			BREED as breed,
+			DOG_SIZE as dogSize,
+			NEUTRALIZATION_YN as neutralizationYN,
+			VACCINATION_YN as vaccinationYN,
+			BIRTHDATE  as birthdate,
+			DOG_PROFILE as dogProfile,
+			DEL_YN as delYN 
+		from dog where DOG_NO=#{dogNo} and DEL_YN='N'
+	</select>
+	
+	<update id="updateDogInfo" parameterType="dog">
+		update dog set 
+			DOG_NAME =#{dogName},
+			GENDER =#{gender},
+			BREED =#{breed},
+			DOG_SIZE =#{dogSize},
+			NEUTRALIZATION_YN =#{neutralizationYN},
+			VACCINATION_YN =#{vaccinationYN},
+			BIRTHDATE =#{birthdate},
+			DOG_PROFILE =#{dogProfile} 
+		where DOG_NO=#{dogNo} and MEMBER_NO=#{memberNo} and del_YN='N'
+	</update>
+	
+	<update id="deleteDogInfo">
+		update dog set 
+			DEL_YN = 'Y' 
+		where DOG_NO=#{dogNo} and DEL_YN='N'
+	</update>
+  
+</mapper>

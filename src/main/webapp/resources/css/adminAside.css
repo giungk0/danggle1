@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR&display=swap');  
+@charset "UTF-8";    
+    * {
+        font-family: 'noto sans kr'; 
+    }
+    
+    .asideWrap{
+        width: 100%;
+        height: 100%;   
+        
+        box-sizing: border-box;
+        margin: 0px;
+        position: relative;        
+    }
+
+
+    .highlight:hover {     
+     transition-property: transform;
+     transition-duration: 0.2s;
+     transform:translateX(20px);
+        
+	}
+    
+    ul>li:hover .highlight:after{
+  width:100%;
+    }
+    
+.highlight{
+  display: inline-block; 
+  position: relative;
+}
+.highlight:after{
+  content:"";
+  width: 0;
+  height: 10px;
+  display: inline-block;
+  background: #ff8a40;
+  opacity:0.7;
+  position: absolute;
+  bottom:0;
+  left:0;
+  z-index:-1;
+  transition: 0.2s all;
+}
+    
+    .category{
+    cursor:pointer;
+    padding: 3px;    
+    }
+
+    li>span{
+        cursor: pointer;
+        font-size: 20px;
+    }
+    ul {
+        display: none;
+    }    

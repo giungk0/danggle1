@@ -1,0 +1,135 @@
+@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap);
+.header {
+	background-color:white;
+	height:240px;
+}
+
+.login-form{
+	width: 300px;
+}
+
+.icon_box{
+    margin: 0px auto;
+}
+
+h2 {
+  margin: 0 0 10px 0;
+  text-align: center;
+  color: #400040;
+}
+
+hr{
+  margin-bottom:20px;
+  align:center;
+  width:200px;
+}
+
+.footer{
+	background-color:white;
+	height: 235px
+}
+
+input::placeholder{
+  color: #919CA7;
+  font-size: 14px;
+}
+
+.form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 300px;
+  margin: 105px auto;
+  padding: 60px 70px 60px 70px;
+  text-align: center;
+  filter:drop-shadow(4px 4px 4px rgba(0,0,0,0.1));
+  
+}
+.form input {
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: 0;
+  background: #ffffff;
+  width: 100%;
+  border: 1px solid #b3b3b3;
+  margin: 0 0 5px;
+  padding: 9px 8px 6px 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  border-radius: 5px;
+}
+.form button {
+  font-family: 'Noto Sans KR', sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #ffbc79;
+  width: 100%;
+  border: 0;
+  padding: 12px;
+  color: #3c1e00;
+  font-size: 15px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top:14px;
+  margin-bottom:6px;
+}
+.form button:hover,.form button:active,.form button:focus {
+  background: #ffc488;
+}
+
+.form .message {
+  margin: 0 0 10px;
+  color: #b3b3b3;
+  font-size: 12px;
+  text-decoration : none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+
+placeholder {
+  color: 919CA7;
+  font-size: 15px;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #FAFBFE; /* fallback for old browsers */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size:15px;
+  font-weight:bold;
+  color:#919CA7;
+  height: 100%;  
+  text-decoration: none;
+}

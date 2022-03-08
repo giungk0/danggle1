@@ -1,0 +1,182 @@
+@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap);
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #FAFBFE; /* fallback for old browsers */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size:15px;
+  font-weight:bold;
+  color:#919CA7;
+  height: 100%;  
+}
+
+.header{
+ background-color:white;
+  height:240px;
+}
+
+input::placeholder{
+  color: #919CA7;
+  font-size: 13px;
+}
+
+img{
+	width:450px;
+	display: block;
+	margin: 0px auto;
+}
+
+#user_icon {
+    display: block;
+    margin: 0px auto;
+    margin-bottom: 20px;
+    width: 100%;
+ 	height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.icon_box{
+	width: 75px;
+    height: 75px; 
+    border-radius: 70%;
+    overflow: hidden;
+    margin: 0px auto;
+}
+
+#camera_icon {
+    margin-bottom: 20px;
+    width: 30px;
+ 	height: 30px;
+    overflow: hidden;
+    position: absolute;
+    position: relative;
+    left:25px;
+    top: -30px;
+}
+
+form {
+  max-width: 430px;
+  margin: 105px auto;
+  padding: 15px;
+  background: #ffffff;
+  border-top-left-radius : 0px;
+  border-top-right-radius : 0px;
+  border-bottom-right-radius : 5px;
+  border-bottom-left-radius : 5px;
+  filter: drop-shadow(4px 4px 4px rgba(0,0,0,0.1));
+}
+
+h2 {
+  text-align: center;
+  color: #400040;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="datetime"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+input[type="email"],
+input[type="select"]
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 15px;
+  color: 
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 9px 8px 6px 8px;
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #efece8;
+  border-radius: 5px;
+  margin-bottom:35px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+
+select {
+  padding: 2px;
+  height: 32px;
+  border-radius: 5px;
+  color:#919CA7;
+  font-size: 15px;
+}
+
+
+button[type="submit"] {
+  padding: 19px 39px 18px 39px;
+  color: white;
+  background-color: #ff8000;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #ffffff;
+  margin-top: 10px;
+}
+
+fieldset {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  border: none;
+  padding: 20px;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.form input {
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: 0;
+  background: #ffffff;
+  width: 80%;
+  border: 1px solid #fafbfe;
+  margin: 0 0 5px;
+  padding: 12px;
+  box-sizing: border-box;
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+
+@media screen and (min-width: 480px) {
+  form {
+    max-width: 400px;
+  }
+}
